@@ -1,0 +1,52 @@
+{
+  "users": [
+    {
+      "id": "bfa1",
+      "email": "szypulinskin@gmail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "blue"
+    },
+    {
+      "id": "da92",
+      "email": "szypulinskin@gmail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "red"
+    },
+    {
+      "id": "c4d8",
+      "email": "szypulinskin@gmail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "blue"
+    },
+    {
+      "id": "9cdf",
+      "email": "szypulinskin@gmail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "blue"
+    },
+    {
+      "id": "5bb8",
+      "email": "szypulinskin@gmail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "blue"
+    },
+    {
+      "id": "d8b6",
+      "email": "szypulinskin@mail.com",
+      "password": "DopenDope12107!",
+      "fullName": "Nathaniel B Szypulinski",
+      "phoneNumber": "+7089499487",
+      "favoriteColor": "purple"
+    }
+  ]
+}
