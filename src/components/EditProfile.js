@@ -1,33 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {Box, Button, Container, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from "@mui/material";
 
 const EditProfile = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [favoriteColor, setFavoriteColor] = useState('');
     const [error, setError] = useState('');
+    const [user, setUser] = useState([]);
+    const { email } = useParams();
 
     useEffect(() => {
         // Load user data from localStorage
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user) {
-            setEmail(user.email);
-            setPassword(user.password);
-            setFullName(user.fullName);
-            setPhoneNumber(user.phoneNumber || '');
-            setFavoriteColor(user.favoriteColor);
-        } else {
-            navigate('/'); // Redirect to login if no user data is found
-        }
-    }, [navigate]);
+        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+        console.log('NATES STORED USERS', storedUsers);
+        const activeUser = storedUsers.find((user) => user.email === email);
+        setUser(activeUser);
+    }, [email]);
 
-    const validateEmail = (email) => {
+    const validateEmail = (userEmail) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
+        return emailRegex.test(userEmail);
     };
 
     const validatePassword = (password) => {
@@ -41,7 +37,7 @@ const EditProfile = () => {
     };
 
     const validateForm = () => {
-        if (!email || !validateEmail(email)) {
+        if (!userEmail || !validateEmail(userEmail)) {
             setError('Please enter a valid email address.');
             return false;
         }
@@ -72,13 +68,13 @@ const EditProfile = () => {
 
         // Save updated profile to localStorage
         const updatedUser = {
-            email,
+            userEmail,
             password,
             fullName,
             phoneNumber,
             favoriteColor,
         };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+        localStorage.setItem('users', JSON.stringify(updatedUser));
 
         alert('Profile updated successfully!');
         navigate('/profile'); // Redirect to profile view after saving
@@ -95,9 +91,9 @@ const EditProfile = () => {
                 <Typography
                     variant="h4"
                     gutterBottom
-                    sx={{ color: favoriteColor }}
+                    sx={{ color: user.favoriteColor }}
                 >
-                    Edit {fullName} Profile
+                    Edit {user.fullName} Profile
                 </Typography>
                 {error && (
                     <Typography variant="body1" color="error" gutterBottom>
@@ -109,8 +105,8 @@ const EditProfile = () => {
                         margin="normal"
                         label="Email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={user.email}
+                        onChange={(e) => setUserEmail(e.target.value)}
                         required
                     />
                     <TextField
@@ -118,7 +114,7 @@ const EditProfile = () => {
                         margin="normal"
                         label="Password"
                         type="password"
-                        value={password}
+                        value={user.password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
@@ -127,7 +123,7 @@ const EditProfile = () => {
                         margin="normal"
                         label="Full Name"
                         type="text"
-                        value={fullName}
+                        value={user.fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         required
                     />
@@ -136,13 +132,13 @@ const EditProfile = () => {
                         margin="normal"
                         label="Phone Number (Optional)"
                         type="tel"
-                        value={phoneNumber}
+                        value={user.phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                     />
                     <FormControl fullWidth margin="normal" required>
                         <InputLabel>Favorite Color</InputLabel>
                         <Select
-                            value={favoriteColor}
+                            value={user.favoriteColor}
                             onChange={(e) => setFavoriteColor(e.target.value)}
                             label="Favorite Color"
                         >

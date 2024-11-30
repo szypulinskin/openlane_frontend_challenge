@@ -13,9 +13,9 @@ function App() {
                 <Typography>Nate's FrontEnd Challenge</Typography>
                 <Routes>
                     <Route path="/" element={<Login />} />
-                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/:email" element={<Profile />} />
                     <Route path="/create-profile" element={<CreateProfile />} />
-                    <Route path="/edit-profile" element={<EditProfile />} />
+                    <Route path="/edit-profile/:email" element={<EditProfile />} />
                 </Routes>
             </Box>
         </Router>

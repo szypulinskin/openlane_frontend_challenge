@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {Box, Button, Container, TextField, Typography} from "@mui/material";
 
@@ -6,34 +6,48 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [users, setUsers] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+        console.log('NATES STORED USERS', storedUsers);
+        setUsers(storedUsers);
+    }, []);
+
+    const authenticateUser = () => {
+        const user = users.find((user) => user.email === email);
+
+        if (!user) {
+            return { success: false, message: 'User not found' };
+        }
+
+        if (user.password === password) {
+            return { success: true, message: 'Login successful' };
+        } else {
+            return { success: false, message: 'Incorrect password' };
+        }
+    };
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // Simple validation
         if (!email || !password) {
             setError('Both email and password are required.');
             return;
         }
 
-        try {
-            const response = await fetch(`http://localhost:5000/users?email=${email}&password=${password}`);
-            const users = await response.json();
+        const result = authenticateUser();
 
-            if (users.length === 0) {
-                setError('Invalid email or password');
-                return;
-            }
+        alert(result.message);
 
-            // Store user in localStorage
-            localStorage.setItem('user', JSON.stringify(users[0]));
-
-            // Navigate to the profile page
-            navigate('/profile');
-        } catch (error) {
-            setError('Failed to login. Please try again later.');
+        if(result.success) {
+            navigate(`/profile/${email}`);
         }
+
+
+
+
     };
 
     function handleCreateAccount() {

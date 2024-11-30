@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -21,7 +21,14 @@ const CreateProfile = () => {
     const [favoriteColor, setFavoriteColor] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [users, setUsers] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
+        console.log('NATES STORED USERS', storedUsers);
+        setUsers(storedUsers);
+    }, []);
 
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -64,57 +71,39 @@ const CreateProfile = () => {
     };
 
     const handleCreateProfile = async (e) => {
-        e.preventDefault();
-        if (!validateForm()) {
-            return;
+
+        const emailExists = users.some((user) => user.email === email);
+        if (emailExists) {
+            alert('This email already exists!')
+        } else {
+            e.preventDefault();
+            if (!validateForm()) {
+                return;
+            }
+            setLoading(true);
+
+            const formattedPhoneNumber = phoneNumber && validatePhoneNumber(phoneNumber)
+                ? phoneNumber.replace(/[^0-9]/g, '') : '';
+
+            const newUser = {
+                email,
+                password,
+                fullName,
+                phoneNumber: formattedPhoneNumber ? `+${formattedPhoneNumber}` : null,
+                favoriteColor,
+            };
+
+            const newSetOfUsers = users;
+            newSetOfUsers.push(newUser);
+            localStorage.setItem('users', JSON.stringify(newSetOfUsers));
+            setLoading(false);
+            alert('Profile was created!')
+            navigate('/');
+
         }
 
-        setLoading(true);
+        setLoading(false);
 
-        fetch(`http://localhost:5000/users?email=${encodeURIComponent(email)}`)
-            .then(response => response.json())
-            .then(async data => {
-                if (data.length > 0) {
-                    alert('Email Already Exists!');
-                    setLoading(false);
-                } else {
-                    try {
-                        // Send POST request to save user data to the server
-                        const response = await fetch('http://localhost:5000/users', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(newUser),
-                        });
-
-                        if (!response.ok) {
-                            throw new Error('Failed to create profile');
-                        }
-
-                        alert('Profile created successfully!');
-                        navigate('/');
-                    } catch (error) {
-                        alert('Error creating profile: ' + error.message);
-                    } finally {
-                        setLoading(false);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("Error checking email:", error);
-            });
-
-        const formattedPhoneNumber = phoneNumber && validatePhoneNumber(phoneNumber)
-            ? phoneNumber.replace(/[^0-9]/g, '') : '';
-
-        const newUser = {
-            email,
-            password,
-            fullName,
-            phoneNumber: formattedPhoneNumber ? `+${formattedPhoneNumber}` : null,
-            favoriteColor,
-        };
     };
 
     return (
