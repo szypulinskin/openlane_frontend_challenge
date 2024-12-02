@@ -14,7 +14,10 @@ import {
 } from "@mui/material";
 
 const EditProfile = () => {
+    // EditProfile lets the user change any attributes to their account and lets them save or cancel all changes
+
     const navigate = useNavigate();
+    // useStates underneath are all used to set the textfields dynamically and can see edits live to name and color.
     const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
@@ -23,11 +26,14 @@ const EditProfile = () => {
     const [error, setError] = useState('');
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
+    // storedUsers state is used to get all user data from localStorage so it is live data and can be altered
     const [storedUsers, setStoredUsers] = useState(JSON.parse(localStorage.getItem('users')) || [])
+    // email param is used to pass in the users account that wants to be edited
     const { email } = useParams();
 
     useEffect(() => {
-        // Load user data from localStorage
+        // This effect fetches all user data in localStorage and uses .find to filter out the profile used to
+        // log in. Then all details are stored in a state to dynamically change the textfields.
         const loadData = async () => {
             setStoredUsers(JSON.parse(localStorage.getItem('users')) || []);
             if (storedUsers) {
@@ -45,6 +51,7 @@ const EditProfile = () => {
 
     }, [loading]);
 
+    // Validates all field when trying to save to make sure user does not input invalid inputs.
     const validateEmail = (userEmail) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(userEmail);
@@ -85,6 +92,7 @@ const EditProfile = () => {
         return true;
     };
 
+    // Updated user profile will be updated to localStorage with its new values
     const handleSaveProfile = () => {
         if (!validateForm()) {
             return;
@@ -98,6 +106,7 @@ const EditProfile = () => {
             phoneNumber,
             favoriteColor,
         };
+        // if emails stay the same we just replace the index of that user with their updated attributes
         if (user.email === updatedUser.userEmail) {
             const index = storedUsers.findIndex(user => user.email === updatedUser.userEmail);
 
@@ -106,18 +115,22 @@ const EditProfile = () => {
             }
 
             localStorage.setItem('users', JSON.stringify(storedUsers));
-        } else {
+        }
+        // if email was changed we remove the old user profile with the old email and add the new
+        // user profile with their updated email
+        else {
             const updatedUsers = storedUsers.filter(user => user.userEmail !== email)
             updatedUsers.push(updatedUser);
             localStorage.setItem('users', JSON.stringify(updatedUsers));
         }
 
+        // Let user know their account is updated and navigate to their updated profile
         alert('Profile updated successfully!');
-        navigate(`/profile/${userEmail}`); // Redirect to profile view after saving
+        navigate(`/profile/${userEmail}`);
     };
 
+    // naviage user back to their original profile if they dont wish to save changes
     const handleCancel = () => {
-        // Navigate back to profile page, discarding changes
         navigate(`/profile/${email}`);
     };
 

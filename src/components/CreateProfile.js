@@ -13,7 +13,10 @@ import {
     Typography
 } from "@mui/material";
 
+// This component lets a user input their attributes and checks if input is valid. If everything is valid it will push
+// the data to localStorage along with all existing users.
 const CreateProfile = () => {
+    // All states to dynamically track user inputs.
     const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
@@ -24,11 +27,13 @@ const CreateProfile = () => {
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
 
+    // effects sets users with all existing users from localStorage
     useEffect(() => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
         setUsers(storedUsers);
     }, []);
 
+    // All validations below track a users input when create profile button is pressed
     const validateEmail = (userEmail) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(userEmail);
@@ -69,6 +74,8 @@ const CreateProfile = () => {
         return true;
     };
 
+    // Checks if the email provided has an existing profile in localStorage, if its a unique profile it will
+    // add the profile to localStorage with existing users and navigate back to home ('/').
     const handleCreateProfile = async (e) => {
 
         const emailExists = users.some((user) => user.userEmail === userEmail);
@@ -88,7 +95,7 @@ const CreateProfile = () => {
                 userEmail,
                 password,
                 fullName,
-                phoneNumber: formattedPhoneNumber ? `+${formattedPhoneNumber}` : null,
+                phoneNumber: formattedPhoneNumber || null,
                 favoriteColor,
             };
 

@@ -8,7 +8,9 @@ import {
     Typography
 } from "@mui/material";
 import DeleteDialog from './DeleteDialog'
+import PhoneNumberField from "./PhoneNumberField";
 
+// Profile component displays all of users details and has option to delete and edit the account
 const Profile = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState({});
@@ -22,7 +24,8 @@ const Profile = () => {
     const { email } = useParams();
 
     useEffect(() => {
-        // Load user data from localStorage
+        // This effect fetches all user data in localStorage and uses .find to filter out the profile used to
+        // log in. Then all details are stored in a state to dynamically change the textfields.
         const loadData = async () => {
             setStoredUsers(JSON.parse(localStorage.getItem('users')) || []);
             if (storedUsers) {
@@ -40,8 +43,9 @@ const Profile = () => {
 
     }, [loading]);
 
+    // When edit button is clicked this is called that navigates to the edit profile page
     const handleEdit = (value) => {
-        navigate(`/edit-profile/${email}`)
+        navigate(`/edit-profile/${userEmail}`)
     };
 
     return (
@@ -94,18 +98,7 @@ const Profile = () => {
                             },
                         }}
                     />
-                    <TextField
-                        fullWidth
-                        margin="normal"
-                        label="Phone Number (Optional)"
-                        type="tel"
-                        value={phoneNumber}
-                        slotProps={{
-                            input: {
-                                readOnly: true,
-                            },
-                        }}
-                    />
+                    <PhoneNumberField phoneNumber={phoneNumber}/>
                     <TextField
                         fullWidth
                         margin="normal"
@@ -126,6 +119,8 @@ const Profile = () => {
                         >
                             Edit
                         </Button>
+                        {/*DeleteDialog brings up a pop-up box asking the user if they are sure
+                           they want to delete their profile.*/}
                         <DeleteDialog/>
                     </Box>
             </Box>
