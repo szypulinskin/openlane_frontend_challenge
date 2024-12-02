@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 
 const CreateProfile = () => {
-    const [email, setEmail] = useState('');
+    const [userEmail, setUserEmail] = useState('');
     const [password, setPassword] = useState('');
     const [fullName, setFullName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -26,13 +26,12 @@ const CreateProfile = () => {
 
     useEffect(() => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-        console.log('NATES STORED USERS', storedUsers);
         setUsers(storedUsers);
     }, []);
 
-    const validateEmail = (email) => {
+    const validateEmail = (userEmail) => {
         const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
+        return emailRegex.test(userEmail);
     };
 
     const validatePassword = (password) => {
@@ -46,7 +45,7 @@ const CreateProfile = () => {
     };
 
     const validateForm = () => {
-        if (!email || !validateEmail(email)) {
+        if (!userEmail || !validateEmail(userEmail)) {
             setError('Please enter a valid email address.');
             return false;
         }
@@ -72,7 +71,7 @@ const CreateProfile = () => {
 
     const handleCreateProfile = async (e) => {
 
-        const emailExists = users.some((user) => user.email === email);
+        const emailExists = users.some((user) => user.userEmail === userEmail);
         if (emailExists) {
             alert('This email already exists!')
         } else {
@@ -86,7 +85,7 @@ const CreateProfile = () => {
                 ? phoneNumber.replace(/[^0-9]/g, '') : '';
 
             const newUser = {
-                email,
+                userEmail,
                 password,
                 fullName,
                 phoneNumber: formattedPhoneNumber ? `+${formattedPhoneNumber}` : null,
@@ -122,8 +121,8 @@ const CreateProfile = () => {
                         margin="normal"
                         label="Email"
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.target.value)}
                         required
                     />
                     <TextField
@@ -160,13 +159,13 @@ const CreateProfile = () => {
                             label="Favorite Color"
                         >
                             <MenuItem value="">Select Color</MenuItem>
-                            <MenuItem value="blue">Blue</MenuItem>
-                            <MenuItem value="red">Red</MenuItem>
-                            <MenuItem value="green">Green</MenuItem>
-                            <MenuItem value="yellow">Yellow</MenuItem>
-                            <MenuItem value="purple">Purple</MenuItem>
-                            <MenuItem value="black">Black</MenuItem>
-                            <MenuItem value="orange">Orange</MenuItem>
+                            <MenuItem value="Blue">Blue</MenuItem>
+                            <MenuItem value="Red">Red</MenuItem>
+                            <MenuItem value="Green">Green</MenuItem>
+                            <MenuItem value="Yellow">Yellow</MenuItem>
+                            <MenuItem value="Purple">Purple</MenuItem>
+                            <MenuItem value="Black">Black</MenuItem>
+                            <MenuItem value="Orange">Orange</MenuItem>
                         </Select>
                     </FormControl>
                     <Button

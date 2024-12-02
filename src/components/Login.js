@@ -11,12 +11,11 @@ const Login = () => {
 
     useEffect(() => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
-        console.log('NATES STORED USERS', storedUsers);
         setUsers(storedUsers);
     }, []);
 
     const authenticateUser = () => {
-        const user = users.find((user) => user.email === email);
+        const user = users.find((user) => user.userEmail === email);
 
         if (!user) {
             return { success: false, message: 'User not found' };
