@@ -3,11 +3,14 @@ import {Box, Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@m
 import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
+// Button that brings up dialog box to confirm with user if they want to delete their account
 const DeleteDialog = () => {
     const [open, setOpen] = useState(false);
     const { email } = useParams();
     const navigate = useNavigate();
-    //
+
+    // When yes is selected we filter out the account from localStorage and set it back to localStorage without
+    // the current users account. We are then navigated back to home ('/').
     const handleYes = () => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || []
         const updatedUsers = storedUsers.filter(user => user.userEmail !== email);
@@ -16,16 +19,17 @@ const DeleteDialog = () => {
         navigate('/');
     }
 
+    // When no is selected it sets open to false and closes the dialog box
     const handleNo = () => {
         setOpen(false);
     }
 
-    // Open dialog
+    // Open dialog when delete button is clicked
     const handleClickOpen = () => {
         setOpen(true);
     };
 
-    // Close dialog
+    // When clicking outside of the dialog box it closes the dialog box
     const handleClose = () => {
         setOpen(false);
     };

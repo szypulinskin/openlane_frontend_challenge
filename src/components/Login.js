@@ -3,17 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import {Box, Button, Container, TextField, Typography} from "@mui/material";
 
 const Login = () => {
+    // Log in page that checks for a email and password and checks localStorage if account exists.
+    // Also includes a button to create an account
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
 
+    // Effect sets users state with what is returned in localStorage, if localStorage is empty its set empty array
     useEffect(() => {
         const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
         setUsers(storedUsers);
     }, []);
 
+    // Checks if email provided is found returned in localStorage state and checks if password matches
     const authenticateUser = () => {
         const user = users.find((user) => user.userEmail === email);
 
@@ -28,6 +33,8 @@ const Login = () => {
         }
     };
 
+    // User provides a proper email and password then they are alerted with if the account exists or not
+    // and will be navigated to their account if password is correct
     const handleLogin = async (e) => {
         e.preventDefault();
 
@@ -49,7 +56,8 @@ const Login = () => {
 
     };
 
-    function handleCreateAccount() {
+    // When create an account button is selected it navigates a user to create an account
+    const handleCreateAccount = () => {
         navigate('/create-profile')
     }
 
